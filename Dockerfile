@@ -5,7 +5,13 @@ FROM python:3.7-slim
 RUN apt-get update && apt-get install -y --no-install-recommends git ffmpeg build-essential gfortran libblas-dev liblapack-dev && rm -rf /var/lib/apt/lists/*
 
 # Install required Python packages
-RUN pip install numpy scipy librosa future
+## as long as bug https://github.com/librosa/librosa/issues/1113 is in PyPI version don't use it
+## RUN pip install numpy scipy librosa future
+RUN pip install numpy scipy future
+
+## Install librosa from github because bug https://github.com/librosa/librosa/issues/1113 is already fixed there
+RUN git clone https://github.com/librosa/librosa.git
+RUN pip install -e librosa
 
 # Install Theano and Lasagne
 RUN pip install -r https://raw.githubusercontent.com/Lasagne/Lasagne/master/requirements.txt
